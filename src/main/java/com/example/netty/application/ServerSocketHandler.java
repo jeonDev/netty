@@ -13,14 +13,10 @@ public class ServerSocketHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("channelRead");
-        String readMessage = ((ByteBuf)msg).toString(Charset.defaultCharset());
+        ByteBuf buf = (ByteBuf) msg;
+        String readMessage = buf.toString(Charset.forName("UTF-8"));
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("수신한 문자열[");
-        builder.append(readMessage);
-        builder.append("]");
-
-        log.info(builder.toString());
+        log.info("response : {}", readMessage.toString());
 
         ctx.write(msg);
     }

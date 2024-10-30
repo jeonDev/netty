@@ -18,31 +18,21 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
         String sendMessage = "Hello Netty";
 
-        ByteBuf messageBuffer = Unpooled.buffer();
-        messageBuffer.writeBytes(sendMessage.getBytes(StandardCharsets.UTF_8));
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeBytes(sendMessage.getBytes(StandardCharsets.UTF_8));
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("전송한 문자열[");
-        builder.append(sendMessage);
-        builder.append("]");
+        log.info("request : {}", sendMessage);
 
-        log.info(builder.toString());
-        ctx.writeAndFlush(messageBuffer);
+        ctx.writeAndFlush(buf);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("channelRead");
+        ByteBuf buf = (ByteBuf) msg;
+        String readMessage = buf.toString(Charset.defaultCharset());
 
-        String readMessage = ((ByteBuf)msg).toString(Charset.defaultCharset());
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("수신한 문자열[");
-        builder.append(readMessage);
-        builder.append("]");
-
-        log.info(builder.toString());
-
+        log.info("response : {}", readMessage);
         ctx.write(msg);
     }
 
