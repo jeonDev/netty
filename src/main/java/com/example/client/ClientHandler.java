@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.IntStream;
 
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
@@ -16,14 +17,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) {
         log.info("channelActive");
 
-        String sendMessage = "Hello Netty";
+        IntStream.range(0, 10).forEach(taskId -> {
+            log.info("taskId : {}",taskId);
+            String sendMessage = "Hello Netty";
 
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeBytes(sendMessage.getBytes(StandardCharsets.UTF_8));
+            ByteBuf buf = Unpooled.buffer();
+            buf.writeBytes(sendMessage.getBytes(StandardCharsets.UTF_8));
 
-        log.info("request : {}", sendMessage);
+            log.info("request : {}", sendMessage);
 
-        ctx.writeAndFlush(buf);
+            ctx.writeAndFlush(buf);
+        });
     }
 
     @Override
@@ -33,13 +37,13 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         String readMessage = buf.toString(Charset.defaultCharset());
 
         log.info("response : {}", readMessage);
-        ctx.write(msg);
+//        ctx.write(msg);
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
         log.info("channelReadComplete");
-        ctx.close();
+//        ctx.close();
     }
 
     @Override
