@@ -18,11 +18,10 @@ public class ServerSocketHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        log.info("channelRead : {}", msg.toString());
         ByteBuf buf = (ByteBuf) msg;
         String readMessage = buf.toString(Charset.forName("UTF-8"));
 
-        log.info("response : {}", readMessage.toString());
+        log.info("response {} {} : {}", buf.capacity(), readMessage.length(), readMessage.toString());
 
         ByteBuf byteBuf = Unpooled.wrappedBuffer(readMessage.getBytes());
 

@@ -13,8 +13,8 @@ public class TestClient {
     public static void main(String[] args) throws InterruptedException {
         String serverAddress = "127.0.0.1";
         int serverport = 10035;
-        int threadCount = 1;
-        int telegramSendCount = 1000;
+        int threadCount = 5;
+        int telegramSendCount = 20;
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
