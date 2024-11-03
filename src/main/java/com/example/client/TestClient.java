@@ -13,8 +13,8 @@ public class TestClient {
     public static void main(String[] args) throws InterruptedException {
         String serverAddress = "127.0.0.1";
         int serverport = 10035;
-        int threadCount = 5;
-        int telegramSendCount = 20;
+        int threadCount = 2;
+        int telegramSendCount = 100;
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
         CountDownLatch latch = new CountDownLatch(threadCount);
@@ -31,7 +31,16 @@ public class TestClient {
                             Thread.sleep(100);
                         }
 
-                        String telegram = "Telegram" +String.format("%010d%010d", taskId, i) + "                                                                      End";
+                        Thread.sleep(500);
+                        String telegram = i % 2 == 0
+                                ? "Telegram" +String.format("%010d%010d", taskId, i) + "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        End"
+                                : "Telegram" +String.format("%010d%010d", taskId, i) + "                                                                                                                                                                                                                                                                                                                                                                                     End";
+//                        String telegram = "Telegram" +String.format("%010d%010d", taskId, i) + "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                End";
+
+//                        String telegram = "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
+//                        String telegram = taskId % 2 == 0
+//                                ? "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"
+//                                : "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
                         ByteBuffer writeBuffer = ByteBuffer.wrap(telegram.getBytes());
                         System.out.println(Thread.currentThread().getName() + " : Request(" + telegram.length() + ") :" + telegram);
                         socketChannel.write(writeBuffer);
@@ -52,6 +61,7 @@ public class TestClient {
                     socketChannel.close();
 
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 } finally {
                     latch.countDown();

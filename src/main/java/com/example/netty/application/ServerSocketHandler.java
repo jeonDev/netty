@@ -30,12 +30,6 @@ public class ServerSocketHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelReadComplete(ChannelHandlerContext ctx) {
-        log.info("channelReadComplete");
-//        ctx.flush();
-    }
-
-    @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("exceptionCaught");
         cause.printStackTrace();

@@ -37,7 +37,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         String readMessage = buf.toString(Charset.defaultCharset());
 
         log.info("response : {}", readMessage);
-//        ctx.write(msg);
+        ctx.write(msg);
     }
 
     @Override

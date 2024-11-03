@@ -15,19 +15,20 @@ public class ServerSocket {
 
     private final ServerBootstrap serverBootstrap;
     private final EventLoopGroup bossGroup;
-//    private final EventLoopGroup workerGroup;
+    private final EventLoopGroup workerGroup;
     private final Channel serverChannel;
 
     public ServerSocket(ServerSocketHandler serverSocketHandler) throws InterruptedException {
         log.info("ServerSocket Start");
-        this.bossGroup = new NioEventLoopGroup(10);
-//        this.workerGroup = new NioEventLoopGroup();
+        this.bossGroup = new NioEventLoopGroup(1);
+        this.workerGroup = new NioEventLoopGroup();
         try {
             this.serverBootstrap = new ServerBootstrap();
-//            serverBootstrap.group(bossGroup, workerGroup)
-            serverBootstrap.group(bossGroup)
+            serverBootstrap.group(bossGroup, workerGroup)
+//            serverBootstrap.group(bossGroup)
                 .channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, 2560)
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.RCVBUF_ALLOCATOR, new FixedRecvByteBufAllocator(1024))
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
@@ -44,7 +45,7 @@ public class ServerSocket {
             log.info("ServerSocket close sync");
 
         } finally {
-//            workerGroup.shutdownGracefully();
+            workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
             log.info("Finish");
         }
@@ -55,7 +56,7 @@ public class ServerSocket {
         ChannelFuture closeFuture = serverChannel.closeFuture();
         closeFuture.sync();
 
-//        workerGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
         bossGroup.shutdownGracefully();
     }
 
