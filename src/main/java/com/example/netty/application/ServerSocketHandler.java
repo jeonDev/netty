@@ -3,7 +3,7 @@ package com.example.netty.application;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 
 @Slf4j
 @Component
-@ChannelHandler.Sharable
+@Sharable
 public class ServerSocketHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -31,8 +31,7 @@ public class ServerSocketHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("exceptionCaught");
-        cause.printStackTrace();
+        log.error("exceptionCaught", cause);
         ctx.close();
     }
 }
